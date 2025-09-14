@@ -8,7 +8,12 @@ const { json } = require('stream/consumers');
 const app = express();
 const port = 4000;
 
-app.use(cors()); // Enable CORS
+const corsOptions ={
+  origin:'*', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200,
+}
+app.use(cors(corsOptions));// Enable CORS
 app.use(express.static(path.join(__dirname)));
 app.use(express.json()); // Add this to parse JSON bodies
 
@@ -616,7 +621,19 @@ app.post('/new', async (req,res)=>{
     </html>`;
     //res.send(html);
     try {
-     const browser = await puppeteer.launch();
+                 const browser = await puppeteer.launch({ 
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu',
+      ],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    });
         const page = await browser.newPage();
         await page.setContent(html, { waitUntil: 'networkidle0' });
         const pdf = await page.pdf({
