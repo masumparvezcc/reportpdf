@@ -621,7 +621,7 @@ app.post('/new', async (req,res)=>{
     </html>`;
     //res.send(html);
     try {
-                 const browser = await puppeteer.launch({ 
+     const browser = await puppeteer.launch({ 
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
